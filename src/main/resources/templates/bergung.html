@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Offene Bergungen</title>
+</head>
+<body>
+<h1>Noch zu bergende Geisternetze</h1>
+
+<p>
+  <a th:href="@{/netze}">Zur Gesamtübersicht</a> |
+  <a th:href="@{/melden}">Neues Geisternetz melden</a>
+</p>
+
+<table border="1" cellpadding="6">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Breitengrad</th>
+    <th>Längengrad</th>
+    <th>Größe</th>
+    <th>Status</th>
+    <th>Aktion</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="netz : ${netze}">
+    <td th:text="${netz.id}"></td>
+    <td th:text="${netz.latitude}"></td>
+    <td th:text="${netz.longitude}"></td>
+    <td th:text="${netz.groesse}"></td>
+    <td th:text="${netz.status}"></td>
+    <td>
+      <form th:if="${netz.status.name() == 'GEMELDET'}"
+            th:action="@{/bergung/uebernehmen}" method="post">
+        <input type="hidden" name="netzId" th:value="${netz.id}">
+        <input type="text" name="bergerName" placeholder="Name" required>
+        <input type="text" name="bergerTelefon" placeholder="Telefon" required>
+        <button type="submit">Bergung übernehmen</button>
+      </form>
+
+      <span th:if="${netz.status.name() == 'BERGUNG_BEVORSTEHEND'}">
+                        <span th:text="'Wird geborgen von: ' + ${netz.berger?.name}"></span>
+                        <form th:action="@{/bergung/abschliessen}" method="post" style="display:inline;">
+                            <input type="hidden" name="netzId" th:value="${netz.id}">
+                            <button type="submit">Als geborgen melden</button>
+                        </form>
+                    </span>
+
+      <form th:action="@{/verschollen}" method="post" style="margin-top:6px;">
+        <input type="hidden" name="netzId" th:value="${netz.id}">
+        <input type="text" name="melderName" placeholder="Name" required>
+        <input type="text" name="melderTelefon" placeholder="Telefon" required>
+        <button type="submit">Als verschollen melden</button>
+      </form>
+    </td>
+  </tr>
+  <tr th:if="${netze.isEmpty()}">
+    <td colspan="6">Aktuell sind keine Netze zu bergen.</td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

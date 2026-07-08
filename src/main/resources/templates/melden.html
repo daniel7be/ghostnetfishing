@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Geisternetz melden</title>
+</head>
+<body>
+<h1>Geisternetz melden</h1>
+
+<p th:if="${fehler}" th:text="${fehler}" style="color: red;"></p>
+
+<form th:action="@{/melden}" th:object="${geisternetz}" method="post">
+    <h2>Angaben zum Netz</h2>
+    <p>
+        <label>Breitengrad (Latitude):
+            <input type="number" step="any" th:field="*{latitude}" required>
+        </label>
+    </p>
+    <p>
+        <label>Längengrad (Longitude):
+            <input type="number" step="any" th:field="*{longitude}" required>
+        </label>
+    </p>
+    <p>
+        <label>Geschätzte Größe:
+            <input type="text" th:field="*{groesse}" required>
+        </label>
+    </p>
+
+    <h2>Angaben zur meldenden Person</h2>
+    <p>
+        <label>
+            <input type="checkbox" name="anonym" value="true"> Anonym melden (ohne Name und Telefon)
+        </label>
+    </p>
+    <p>
+        <label>Name:
+            <input type="text" name="melderName">
+        </label>
+    </p>
+    <p>
+        <label>Telefonnummer:
+            <input type="text" name="melderTelefon">
+        </label>
+    </p>
+
+    <button type="submit">Netz melden</button>
+</form>
+
+<p><a th:href="@{/netze}">Zur Übersicht der Geisternetze</a></p>
+</body>
+</html>
